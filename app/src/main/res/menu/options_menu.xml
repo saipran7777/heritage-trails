@@ -1,0 +1,26 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- "Mark Favorite", should appear as action button if possible -->
+    <item
+        android:id="@+id/bus_route"
+        android:icon="@drawable/ic_directions_bus_white_24dp"
+        android:title="@string/bus_route"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/search_go_btn"
+        android:checkable="false"
+        android:icon="@drawable/ic_search_white_24dp"
+        android:title="@string/search_title"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/trail_btn"
+        android:checkable="false"
+        android:icon="@drawable/ic_directions_walk_white_24dp"
+        android:title="@string/trail"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/intro_btn"
+        android:checkable="false"
+        android:title="@string/intro"/>
+</menu>
