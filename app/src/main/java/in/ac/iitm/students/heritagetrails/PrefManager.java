@@ -10,6 +10,7 @@ public class PrefManager {
     SharedPreferences pref;
     SharedPreferences.Editor editor;
     Context _context;
+    Boolean _isFirstTime=true;
 
     // shared pref mode
     int PRIVATE_MODE = 0;
@@ -25,9 +26,10 @@ public class PrefManager {
         editor = pref.edit();
     }
 
-    public void setFirstTimeLaunch(boolean isFirstTime) {
-        editor.putBoolean(IS_FIRST_TIME_LAUNCH, isFirstTime);
-        editor.commit();
+    public void setFirstLaunchCompleted() {
+        _isFirstTime=false;
+        editor.putBoolean(IS_FIRST_TIME_LAUNCH, _isFirstTime);
+        editor.apply();
     }
 
     public boolean isFirstTimeLaunch() {

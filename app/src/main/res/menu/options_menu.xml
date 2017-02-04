@@ -23,4 +23,15 @@
         android:id="@+id/intro_btn"
         android:checkable="false"
         android:title="@string/intro"/>
+
+    <item
+        android:id="@+id/about_heritage"
+        android:checkable="false"
+        android:title="@string/about_heritage"/>
+
+    <item
+        android:id="@+id/help_btn"
+        android:checkable="false"
+        android:title="@string/help_btn" />
+
 </menu>

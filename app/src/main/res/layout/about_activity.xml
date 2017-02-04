@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".WelcomeActivity">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar2"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            android:elevation="2dp" />
+    </android.support.design.widget.AppBarLayout>
+    <LinearLayout android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent" android:gravity="center">
+    <ImageView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:src="@drawable/heritage_logo">
+    </ImageView>
+    <TextView android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="@string/app_name"
+        android:fontFamily="cursive"
+        android:textSize="@dimen/slide_title"
+        android:textStyle="bold"
+        android:textAlignment="center"></TextView>
+    <TextView android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:text="This app is developed by Institute Mobops Team 2016-17. All rights are reserved"
+        android:textSize="@dimen/slide_desc"
+        android:textAlignment="center"></TextView>
+    <TextView android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:text="In case of any queries contact us at"
+        android:textSize="@dimen/slide_desc"
+        android:textAlignment="center"></TextView>
+    <TextView android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/bg_screen1"
+        android:text="institutewebops@gmail.com"
+        android:id="@+id/mail_link"
+        android:textSize="@dimen/slide_desc"
+        android:textAlignment="center"></TextView>
+    <TextView android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:text="Visit our website for more info"
+        android:textSize="@dimen/slide_desc"
+        android:textAlignment="center"></TextView>
+    <TextView android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/bg_screen1"
+        android:text="heritage.iitm.ac.in"
+        android:textSize="@dimen/slide_desc"
+        android:id="@+id/web_link"
+        android:textAlignment="center"></TextView>
+    </LinearLayout>
+</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

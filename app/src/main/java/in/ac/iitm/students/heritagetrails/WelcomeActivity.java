@@ -17,7 +17,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * Created by sai_praneeth7777 on 17-Dec-16.
@@ -32,6 +31,8 @@ public class WelcomeActivity extends AppCompatActivity {
     private int[] layouts;
     private Button btnSkip, btnNext;
     private PrefManager prefManager;
+    private boolean startHelpPager=false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,18 +40,28 @@ public class WelcomeActivity extends AppCompatActivity {
 
         // Checking for first time launch - before calling setContentView()
         prefManager = new PrefManager(this);
-        try {
-            String start = getIntent().getStringExtra("start");
-            //Toast.makeText(WelcomeActivity.this, start, Toast.LENGTH_SHORT).show();
-            if (start.equals("true")){
-                prefManager.setFirstTimeLaunch(true);
+
+
+        String who_called_me = getIntent().getStringExtra("who_called_me");
+        //Toast.makeText(WelcomeActivity.this, start, Toast.LENGTH_SHORT).show();
+        if (who_called_me.equals("splash_screen")){
+
+            if (!prefManager.isFirstTimeLaunch()) {
+                Intent intent= new Intent(WelcomeActivity.this,MapsActivity.class);
+                startActivity(intent);
+                finish();
             }
-        }catch (Exception e) {
+
+            prefManager.setFirstLaunchCompleted();
+            startHelpPager=true;
+
         }
-        if (!prefManager.isFirstTimeLaunch()) {
-            launchHomeScreen();
-            finish();
-        }
+
+        layouts = new int[]{
+                R.layout.walkthrough1,
+                R.layout.walkthrough2,
+                R.layout.walkthrough3};
+
 
         // Making notification bar transparent
         if (Build.VERSION.SDK_INT >= 21) {
@@ -63,14 +74,6 @@ public class WelcomeActivity extends AppCompatActivity {
         dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
         btnSkip = (Button) findViewById(R.id.btn_skip);
         btnNext = (Button) findViewById(R.id.btn_next);
-
-
-        // layouts of all welcome sliders
-        // add few more layouts if you want
-        layouts = new int[]{
-                R.layout.walkthrough1,
-                R.layout.walkthrough2,
-                R.layout.walkthrough3};
 
         // adding bottom dots
         addBottomDots(0);
@@ -85,7 +88,12 @@ public class WelcomeActivity extends AppCompatActivity {
         btnSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                launchHomeScreen();
+                if(startHelpPager){
+                    Intent intent = new Intent(WelcomeActivity.this,HelpActivity.class);
+                    intent.putExtra("who_called_me","welcome_activity");
+                    startActivity(intent);
+                    finish();
+                }else ReturnToMapsActivity();
             }
         });
 
@@ -99,7 +107,12 @@ public class WelcomeActivity extends AppCompatActivity {
                     // move to next screen
                     viewPager.setCurrentItem(current);
                 } else {
-                    launchHomeScreen();
+                    if(startHelpPager){
+                        Intent intent = new Intent(WelcomeActivity.this,HelpActivity.class);
+                        intent.putExtra("who_called_me","welcome_activity");
+                        startActivity(intent);
+                        finish();
+                    }else ReturnToMapsActivity();
                 }
             }
         });
@@ -128,9 +141,7 @@ public class WelcomeActivity extends AppCompatActivity {
         return viewPager.getCurrentItem() + i;
     }
 
-    private void launchHomeScreen() {
-        prefManager.setFirstTimeLaunch(false);
-        startActivity(new Intent(WelcomeActivity.this, MapsActivity.class));
+    private void ReturnToMapsActivity() {
         finish();
     }
 

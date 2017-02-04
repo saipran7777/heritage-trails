@@ -117,7 +117,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LatLng heritage_center = new LatLng(12.9905663, 80.2322976);
     private ArrayList<Marker> trailMarkers = new ArrayList<>();
     private ArrayList<MarkerOptions> trailMarkerOptions = new ArrayList<>();
-    private int optionalUpdateDialogCount =0;
+    private int optionalUpdateDialogCount = 0;
 
 
     @Override
@@ -146,8 +146,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         pDialog = new ProgressDialog(context);
         progress = new ProgressDialog(context);
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coord_layout);
-
         placesArray = new ArrayList<>();
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            checkLocationPermission();
+        }
 
         getSuggestions();
 
@@ -178,8 +182,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     };
                     thread.start();
                 } else {
-                    Snackbar snackbar = Snackbar.make(coordinatorLayout, "Enter more than two characters", Snackbar.LENGTH_LONG);
-                    snackbar.show();
+                    Toast.makeText(context, "Enter more than two characters", Toast.LENGTH_SHORT).show();
+                    //Snackbar snackbar = Snackbar.make(coordinatorLayout, "Enter more than two characters", Snackbar.LENGTH_LONG);
+                    //snackbar.show();
                 }
 
             }
@@ -208,8 +213,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                                               };
                                                               thread.start();
                                                           } else {
-                                                              Snackbar snackbar = Snackbar.make(coordinatorLayout, "Enter more than two characters", Snackbar.LENGTH_LONG);
-                                                              snackbar.show();
+                                                              Toast.makeText(context, "Enter more than two characters", Toast.LENGTH_SHORT).show();
+                                                              //Snackbar snackbar = Snackbar.make(coordinatorLayout, "Enter more than two characters", Snackbar.LENGTH_LONG);
+                                                              //snackbar.show();
                                                           }
 
                                                           return true;
@@ -221,12 +227,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         );
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-
-        {
-            checkLocationPermission();
-        }
-        // Initializing
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -257,7 +257,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             if (Integer.parseInt(ver) == 1) {
                                 DialogFragment optionalUpdateDialogFragment = new OptionalUpdateDialogFragment();
                                 optionalUpdateDialogFragment.setCancelable(false);
-                                if(optionalUpdateDialogCount ==0){
+                                if (optionalUpdateDialogCount == 0) {
                                     optionalUpdateDialogFragment.show(fm, "OptionalUpdateDialogFragment");
                                     optionalUpdateDialogCount++;
                                 }
@@ -277,7 +277,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+                Snackbar snackbar = Snackbar.make(coordinatorLayout, "Internet Connection Failed.", Snackbar.LENGTH_INDEFINITE);
+                snackbar.show();
+
             }
         }) {
             @Override
@@ -364,7 +367,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 .position(latLong);
                         Marker currMarker = mMap.addMarker(markerOption);
                         currMarker.setTag(location_url);
-                        if(jsonArray.length()==1){
+                        if (jsonArray.length() == 1) {
                             currMarker.showInfoWindow();
                         }
 
@@ -404,6 +407,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 VolleyLog.d("VolleyResponseError", error);
                 Snackbar snackbar = Snackbar.make(coordinatorLayout, "Couldn't connect to the server.", Snackbar.LENGTH_LONG);
                 snackbar.show();
+                MenuItem search_item = myMenu.findItem(R.id.search_go_btn);
+                search_item.setIcon(R.drawable.ic_search_deselected);
+                hideKeyboard(MapsActivity.this);
+                animateSearchOut();
 
             }
         });
@@ -455,8 +462,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), "Couldn't update data.", Toast.LENGTH_SHORT).show();
-
+                //peace
             }
         });
         MySingleton.getInstance(context).addToRequestQueue(jsonObjReq);
@@ -468,11 +474,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         switch (item.getItemId()) {
             case R.id.intro_btn: {
                 Intent i = new Intent(MapsActivity.this, WelcomeActivity.class);
-                i.putExtra("start", "true");
+                i.putExtra("who_called_me", "maps_activity");
                 startActivity(i);
                 // close this activity
-                finish();
+                return true;
             }
+
+            case R.id.help_btn: {
+                Intent i = new Intent(MapsActivity.this, HelpActivity.class);
+                startActivity(i);
+                // close this activity
+                return true;
+            }
+
+            case R.id.about_heritage: {
+                Intent i = new Intent(MapsActivity.this, AboutHeritageActivity.class);
+                startActivity(i);
+                // close this activity
+                return true;
+            }
+
             case R.id.search_go_btn: {
 
                 if (isSearchResultShown) {
@@ -481,6 +502,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     mMap.getUiSettings().setCompassEnabled(true);
                     removeSearchResultMarkers();
                     isSearchResultShown = false;
+                    if (!isBusRouteShown) if (!mHeritageCenterMarker.isVisible())
+                        mHeritageCenterMarker.setVisible(true);
 
                 } else {
                     if (!isDownloaded) getSuggestions();
@@ -492,8 +515,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     mMap.getUiSettings().setMyLocationButtonEnabled(false);
                     mMap.getUiSettings().setCompassEnabled(false);
                     isSearchResultShown = true;
-                    if (!isBusRouteShown) if (mHeritageCenterMarker.isVisible())
-                        mHeritageCenterMarker.setVisible(true);
                 }
 
                 return true;
@@ -520,18 +541,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     mMap.clear();
                     showCampusBoundary();
                     startTrail(trailCount);
-                    Snackbar snackbar = Snackbar.make(coordinatorLayout, "Showing Trail (1/2)", Snackbar.LENGTH_LONG);
-                    snackbar.show();
                 } else if (trailCount == 1) {
                     item.setIcon(R.drawable.ic_trail_selected1);
                     trailCount = 2;
                     startTrail(trailCount);
-                    Snackbar snackbar = Snackbar.make(coordinatorLayout, "Showing Trail (2/2)", Snackbar.LENGTH_LONG);
-                    snackbar.show();
+
                 } else {
                     if (!isDownloaded) getSuggestions();
                     destroyTrailClusterer();
-                    if (mHeritageCenterMarker.isVisible()) mHeritageCenterMarker.setVisible(true);
+                    if (!mHeritageCenterMarker.isVisible()) mHeritageCenterMarker.setVisible(true);
                 }
 
                 return true;
@@ -549,9 +567,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             destroyTrailClusterer();
                         }
                         mMap.addPolyline(lineOptions);
+                        if (mHeritageCenterMarker.isVisible()) mHeritageCenterMarker.setVisible(false);
                         item.setIcon(R.drawable.ic_bus_selected);
                         setUpClusterer();
-                        mHeritageCenterMarker.setVisible(false);
 
                     } else {
                         progress.setMessage("Getting bus route.");
@@ -563,11 +581,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         buildDirectionsUri();
                         if (isTrailShown) {
                             destroyTrailClusterer();
+
+                            //Toast.makeText(context, "destroyed trail clusterer", Toast.LENGTH_SHORT).show();
+
                         }
                         setUpClusterer();
                         showBusRoute();
-                        if (!isSearchResultShown) if (mHeritageCenterMarker.isVisible())
-                            mHeritageCenterMarker.setVisible(true);
+                        if (mHeritageCenterMarker.isVisible()) mHeritageCenterMarker.setVisible(false);
 
                     }
                     isBusRouteShown = true;
@@ -588,7 +608,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             searchResultMarkerArray.add(mMap.addMarker(markerOptions));
                         }
                     }
-                    if (mHeritageCenterMarker.isVisible()) mHeritageCenterMarker.setVisible(true);
+                    if (!isSearchResultShown) if (!mHeritageCenterMarker.isVisible())
+                        mHeritageCenterMarker.setVisible(true);
 
                 }
 
@@ -641,10 +662,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             layer.addLayerToMap();
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Could not load boundary", Toast.LENGTH_SHORT).show();
+            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Could not load boundary", Snackbar.LENGTH_LONG);
+            snackbar.show();
         } catch (XmlPullParserException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Could not load boundary", Toast.LENGTH_SHORT).show();
+            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Could not load boundary", Snackbar.LENGTH_LONG);
+            snackbar.show();
         }
     }
 
@@ -680,13 +703,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-    private void startTrail(final Integer trailCount) {
+    private void startTrail(final Integer trailCounter) {
 
         trailMarkers = new ArrayList<>();
         trailMarkerOptions = new ArrayList<>();
         mTrailClusterMarkerArray = new ArrayList<>();
 
-        final String url = getString(R.string.trail_url) + trailCount;
+        final String url = getString(R.string.trail_url) + trailCounter;
         // Request a string response from the provided URL.
         //Toast.makeText(MapsActivity.this,url, Toast.LENGTH_SHORT).show();
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -733,8 +756,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             } else {
                                 LatLng latLngOAT = new LatLng(12.989281, 80.233585);
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngOAT, 16));
-//                                Snackbar snackbar = Snackbar.make(coordinatorLayout, "Showing all related results...", Snackbar.LENGTH_LONG);
-//                                snackbar.show();
+                            }
+
+                            if (trailCount == 1) {
+                                Snackbar snackbar = Snackbar.make(coordinatorLayout, "Showing Trail (1/2)", Snackbar.LENGTH_LONG);
+                                snackbar.show();
+                            } else if (trailCount == 2) {
+                                Snackbar snackbar = Snackbar.make(coordinatorLayout, "Showing Trail (2/2)", Snackbar.LENGTH_LONG);
+                                snackbar.show();
                             }
                         } catch (JSONException e) {
 
@@ -749,7 +778,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(MapsActivity.this, error.toString(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(MapsActivity.this, error.toString(), Toast.LENGTH_LONG).show();
+                isTrailShown = false;
+                trailCount = 0;
+                MenuItem item = myMenu.findItem(R.id.trail_btn);
+                item.setIcon(R.drawable.ic_trail_deselected);
+                Snackbar snackbar = Snackbar.make(coordinatorLayout, "Internet Connection Failed", Snackbar.LENGTH_LONG);
+                snackbar.show();
+
             }
         });
         MySingleton.getInstance(this).addToRequestQueue(stringRequest);
@@ -924,7 +960,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 // error.networkResponse.statusCode
                 // error.networkResponse.data
                 isBusRouteShown = false;
-                Toast.makeText(MapsActivity.this, "Loading failed!", Toast.LENGTH_LONG).show();
+                //Toast.makeText(MapsActivity.this, "Loading failed!", Toast.LENGTH_LONG).show();
             }
         }) {
 
@@ -962,6 +998,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         };
         MySingleton.getInstance(MapsActivity.this).addToRequestQueue(request);
+
+        int MY_SOCKET_TIMEOUT_MS = 10000;
+        request.setRetryPolicy(new DefaultRetryPolicy(
+                MY_SOCKET_TIMEOUT_MS,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -1045,7 +1087,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
             return false;
         } else {
-            Toast.makeText(context, "Permission already granted. yay", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "Permission already granted. yay", Toast.LENGTH_SHORT).show();
             return true;
         }
     }
@@ -1069,14 +1111,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             buildGoogleApiClient();
                         }
                         mMap.setMyLocationEnabled(true);
-                        Toast.makeText(context, "Permission is granted: Location enabled", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(context, "Permission is granted: Location enabled", Toast.LENGTH_SHORT).show();
                     }
 
                 } else {
 
                     // Permission denied, Disable the functionality that depends on this permission.
 
-                    Toast.makeText(this, "Permission denied", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(this, "Permission denied", Toast.LENGTH_LONG).show();
                     mMap.setMyLocationEnabled(false);
                 }
                 return;

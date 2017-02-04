@@ -22,4 +22,6 @@
     <string name="update">Update</string>
     <string name="dont_update">No, Thanks</string>
     <string name="force_update">Update :|</string>
+    <string name="about_heritage">About</string>
+    <string name="help_btn">Help</string>
 </resources>
