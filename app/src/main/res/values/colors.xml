@@ -40,7 +40,7 @@
 
     <color name="polyline_blue">#D442A5F5</color>
 
-    <color name="help_screen_1">#9575CD</color>
+    <color name="help_screen_1">#78909C</color>
     <color name="help_screen_2">#607D8B</color>
-    <color name="help_screen_3">#FF8A65</color>
+    <color name="help_screen_3">#455A64</color>
 </resources>
