@@ -6,13 +6,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 /**
  * Created by Nitin on 04-02-2017.
@@ -22,7 +20,6 @@ public class HelpActivity extends AppCompatActivity {
     static final int NUM_ITEMS = 3;
     private Button btnSkip;
     private Button btnNext;
-    private RelativeLayout rl;
     private String who_called_me="blah";
 
     MyAdapter mAdapter;
@@ -38,7 +35,6 @@ public class HelpActivity extends AppCompatActivity {
             who_called_me = getIntent().getStringExtra("who_called_me");
         }
         //Toast.makeText(this, who_called_me, Toast.LENGTH_SHORT).show();
-        rl = (RelativeLayout) findViewById(R.id.relative_layout);
         mAdapter = new MyAdapter(getSupportFragmentManager(),this);
 
         mPager = (ViewPager) findViewById(R.id.pager);
@@ -91,19 +87,16 @@ public class HelpActivity extends AppCompatActivity {
             if (position ==0) {
                 btnNext.setText(getString(R.string.next));
                 btnSkip.setVisibility(View.VISIBLE);
-                rl.setBackgroundColor(ContextCompat.getColor(HelpActivity.this,R.color.help_screen_1));
             }
             else if (position ==1) {
                 btnNext.setText(getString(R.string.next));
                 btnSkip.setVisibility(View.VISIBLE);
-                rl.setBackgroundColor(ContextCompat.getColor(HelpActivity.this,R.color.help_screen_2));
             }
             // changing the next button text 'NEXT' / 'GOT IT'
             else if (position ==2) {
                 // last page. make button text to GOT IT
                 btnNext.setText(getString(R.string.start));
                 btnSkip.setVisibility(View.GONE);
-                rl.setBackgroundColor(ContextCompat.getColor(HelpActivity.this,R.color.help_screen_3));
             }
         }
 

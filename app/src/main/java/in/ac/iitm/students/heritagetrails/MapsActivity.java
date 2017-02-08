@@ -23,6 +23,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -102,7 +103,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private AutoCompleteTextView searchField;
     private Polyline polyline;
     private PolylineOptions lineOptions;
-    private Boolean isBusRouteShown = false, isDownloaded = false, isSearchResultShown = false, isTrailShown = false;
+    private Boolean isBusRouteShown = false, isDownloaded = false, isSearchBarShown = false, isSearchResultShown = false, isTrailShown = false, isTrail_2_Shown = false;
     private Toolbar myToolbar;
     private Menu myMenu;
     private CoordinatorLayout coordinatorLayout;
@@ -115,8 +116,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ArrayList<Marker> searchResultMarkerArray = new ArrayList<>();
     private ArrayList<MarkerOptions> searchResultMarkerOptionsArray = new ArrayList<>();
     private LatLng heritage_center = new LatLng(12.9905663, 80.2322976);
-    private ArrayList<Marker> trailMarkers = new ArrayList<>();
-    private ArrayList<MarkerOptions> trailMarkerOptions = new ArrayList<>();
+    private ArrayList<MarkerOptions> trailMarkerOptionsArray = new ArrayList<>();
     private int optionalUpdateDialogCount = 0;
 
 
@@ -148,8 +148,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coord_layout);
         placesArray = new ArrayList<>();
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-        {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
 
@@ -172,7 +171,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     searchField.setText("");
                     removeSearchResultMarkers();
                     searchField.setHint(selection);
-                    isSearchResultShown = true;
 
                     Thread thread = new Thread() {
                         @Override
@@ -203,7 +201,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                                               removeSearchResultMarkers();
                                                               searchField.setText("");
                                                               searchField.setHint(selection.toString());
-                                                              isSearchResultShown = true;
 
                                                               Thread thread = new Thread() {
                                                                   @Override
@@ -370,7 +367,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         if (jsonArray.length() == 1) {
                             currMarker.showInfoWindow();
                         }
-
+                        isSearchResultShown = true;
                         searchResultMarkerOptionsArray.add(markerOption);
                         searchResultMarkerArray.add(currMarker);
 
@@ -496,11 +493,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             case R.id.search_go_btn: {
 
-                if (isSearchResultShown) {
+                if (isSearchBarShown) {
                     animateSearchOut();
                     mMap.getUiSettings().setMyLocationButtonEnabled(true);
                     mMap.getUiSettings().setCompassEnabled(true);
                     removeSearchResultMarkers();
+                    isSearchBarShown = false;
                     isSearchResultShown = false;
                     if (!isBusRouteShown) if (!mHeritageCenterMarker.isVisible())
                         mHeritageCenterMarker.setVisible(true);
@@ -514,7 +512,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     searchField.setHint(R.string.search_hint);
                     mMap.getUiSettings().setMyLocationButtonEnabled(false);
                     mMap.getUiSettings().setCompassEnabled(false);
-                    isSearchResultShown = true;
+                    isSearchBarShown = true;
                 }
 
                 return true;
@@ -524,16 +522,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (trailCount == 0) {
                     item.setIcon(R.drawable.ic_trail_selected);
                     trailCount = 1;
-                    isTrailShown = true;
                     if (isBusRouteShown) {
                         destroyBusStopClusterer();
                     }
-                    if (isSearchResultShown) {
-                        removeSearchResultMarkers();
+                    if (isSearchBarShown) {
+                        if (isSearchResultShown) {
+                            removeSearchResultMarkers();
+                        }
                         MenuItem searchItem = myMenu.findItem(R.id.search_go_btn);
                         animateSearchOut();
                         searchItem.setIcon(R.drawable.ic_search_deselected);
                         isSearchResultShown = false;
+                        isSearchBarShown = false;
                         mMap.getUiSettings().setMyLocationButtonEnabled(true);
                         mMap.getUiSettings().setCompassEnabled(true);
 
@@ -542,14 +542,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     showCampusBoundary();
                     startTrail(trailCount);
                 } else if (trailCount == 1) {
-                    item.setIcon(R.drawable.ic_trail_selected1);
-                    trailCount = 2;
-                    startTrail(trailCount);
+                    if (isTrailShown) {
+                        trailCount = 2;
+                        startTrail(trailCount);
+                        item.setIcon(R.drawable.ic_trail_selected1);
+
+                    }
 
                 } else {
-                    if (!isDownloaded) getSuggestions();
-                    destroyTrailClusterer();
-                    if (!mHeritageCenterMarker.isVisible()) mHeritageCenterMarker.setVisible(true);
+                    if (isTrail_2_Shown) {
+                        destroyTrailClusterer();
+                        if (!mHeritageCenterMarker.isVisible())
+                            mHeritageCenterMarker.setVisible(true);
+                    }
                 }
 
                 return true;
@@ -565,9 +570,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     if (polyline != null) {
                         if (isTrailShown) {
                             destroyTrailClusterer();
+                            Toast.makeText(context, "fuck", Toast.LENGTH_SHORT).show();
                         }
                         mMap.addPolyline(lineOptions);
-                        if (mHeritageCenterMarker.isVisible()) mHeritageCenterMarker.setVisible(false);
+                        if (mHeritageCenterMarker.isVisible())
+                            mHeritageCenterMarker.setVisible(false);
                         item.setIcon(R.drawable.ic_bus_selected);
                         setUpClusterer();
 
@@ -587,7 +594,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         }
                         setUpClusterer();
                         showBusRoute();
-                        if (mHeritageCenterMarker.isVisible()) mHeritageCenterMarker.setVisible(false);
+                        if (mHeritageCenterMarker.isVisible())
+                            mHeritageCenterMarker.setVisible(false);
 
                     }
                     isBusRouteShown = true;
@@ -631,18 +639,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         MenuItem item = myMenu.findItem(R.id.trail_btn);
         item.setIcon(R.drawable.ic_trail_deselected);
         isTrailShown = false;
+        isTrail_2_Shown = false;
         trailCount = 0;
         showCampusBoundary();
         setInfoWindowClickListener();
     }
 
     private void destroyBusStopClusterer() {
-        mMap.clear();
         mMap.setOnCameraIdleListener(null);
         mMap.setOnMarkerClickListener(null);
         MenuItem item = myMenu.findItem(R.id.bus_route);
         item.setIcon(R.drawable.ic_bus_deselected);
         isBusRouteShown = false;
+        mMap.clear();
         showCampusBoundary();
     }
 
@@ -705,8 +714,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void startTrail(final Integer trailCounter) {
 
-        trailMarkers = new ArrayList<>();
-        trailMarkerOptions = new ArrayList<>();
+        trailMarkerOptionsArray = new ArrayList<>();
         mTrailClusterMarkerArray = new ArrayList<>();
 
         final String url = getString(R.string.trail_url) + trailCounter;
@@ -737,17 +745,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                         .snippet("Click for more info...")
                                         .position(latLong);
 
-                                // BAD CODE
-                                Marker currMarker = mMap.addMarker(markerOptions.visible(false));
-                                // BAD CODE
-
-                                currMarker.setTag(location_url);
-                                trailMarkerOptions.add(markerOptions);
-                                trailMarkers.add(currMarker);
+                                trailMarkerOptionsArray.add(markerOptions);
                                 mTrailClusterMarkerArray.add(new ClusterMarkerLocation(latLong, location_url));
 
                             }
-                            setUpClusterer(trailMarkerOptions);
+                            setUpClusterer(trailMarkerOptionsArray);
                             if (pDialog.isShowing()) pDialog.dismiss();
                             LatLng latLngGC;
                             if (jsonArray.length() == 1) {
@@ -761,10 +763,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             if (trailCount == 1) {
                                 Snackbar snackbar = Snackbar.make(coordinatorLayout, "Showing Trail (1/2)", Snackbar.LENGTH_LONG);
                                 snackbar.show();
+                                isTrail_2_Shown = false;
                             } else if (trailCount == 2) {
                                 Snackbar snackbar = Snackbar.make(coordinatorLayout, "Showing Trail (2/2)", Snackbar.LENGTH_LONG);
                                 snackbar.show();
+                                isTrail_2_Shown = true;
                             }
+                            isTrailShown = true;
                         } catch (JSONException e) {
 
                             if (pDialog.isShowing()) pDialog.dismiss();
@@ -780,6 +785,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onErrorResponse(VolleyError error) {
                 //Toast.makeText(MapsActivity.this, error.toString(), Toast.LENGTH_LONG).show();
                 isTrailShown = false;
+                isTrail_2_Shown = false;
                 trailCount = 0;
                 MenuItem item = myMenu.findItem(R.id.trail_btn);
                 item.setIcon(R.drawable.ic_trail_deselected);
@@ -798,7 +804,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void animateSearchOut() {
-        if (!isSearchResultShown) return;
+        if (!isSearchBarShown) return;
         searchField.animate()
                 .translationX(searchBarPosX)
                 .translationY(searchBarPosY)
@@ -819,7 +825,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void animateSearchIn() {
-        if (isSearchResultShown) return;
+        if (isSearchBarShown) return;
         searchField.animate()
                 .translationYBy(myToolbar.getHeight())
                 .setDuration(100)
