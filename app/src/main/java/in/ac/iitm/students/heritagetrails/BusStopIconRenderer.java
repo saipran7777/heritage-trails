@@ -1,7 +1,6 @@
 package in.ac.iitm.students.heritagetrails;
 
 import android.content.Context;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -9,7 +8,18 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
-import static in.ac.iitm.students.heritagetrails.IITMBusStops.*;
+import static in.ac.iitm.students.heritagetrails.IITMBusStops.bt_bus_stop;
+import static in.ac.iitm.students.heritagetrails.IITMBusStops.crc_bus_stop;
+import static in.ac.iitm.students.heritagetrails.IITMBusStops.fourth_cross_street_bus_stop;
+import static in.ac.iitm.students.heritagetrails.IITMBusStops.gajendra_circle_bus_stop;
+import static in.ac.iitm.students.heritagetrails.IITMBusStops.hsb_bus_stop;
+import static in.ac.iitm.students.heritagetrails.IITMBusStops.jam_bus_stop;
+import static in.ac.iitm.students.heritagetrails.IITMBusStops.kv_bus_stop;
+import static in.ac.iitm.students.heritagetrails.IITMBusStops.main_gate;
+import static in.ac.iitm.students.heritagetrails.IITMBusStops.narmada_bus_stop;
+import static in.ac.iitm.students.heritagetrails.IITMBusStops.tgh_bus_stop;
+import static in.ac.iitm.students.heritagetrails.IITMBusStops.vanvani_bus_stop;
+import static in.ac.iitm.students.heritagetrails.IITMBusStops.velachery_gate;
 
 /**
  * Created by admin on 25-01-2017.
@@ -22,7 +32,7 @@ class BusStopIconRenderer extends DefaultClusterRenderer<ClusterMarkerLocation> 
     public BusStopIconRenderer(Context context, GoogleMap map,
                                ClusterManager<ClusterMarkerLocation> clusterManager) {
         super(context, map, clusterManager);
-        this.context=context;
+        this.context = context;
     }
 
 

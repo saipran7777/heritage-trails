@@ -3,6 +3,7 @@ package in.ac.iitm.students.heritagetrails;
 /**
  * Created by sai_praneeth7777 on 10-Nov-16.
  */
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,7 +31,7 @@ public class SplashScreen extends Activity {
                 // This method will be executed once the timer is over
                 // Start your app main activity
                 Intent i = new Intent(SplashScreen.this, WelcomeActivity.class);
-                i.putExtra("who_called_me","splash_screen");
+                i.putExtra("who_called_me", "splash_screen");
                 startActivity(i);
                 // close this activity
                 finish();

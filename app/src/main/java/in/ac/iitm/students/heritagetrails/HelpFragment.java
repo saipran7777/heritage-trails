@@ -52,7 +52,7 @@ public class HelpFragment extends Fragment {
         } else if (drawable_id == 2) {
             drawable = ContextCompat.getDrawable(getActivity(), R.drawable.help_image_3);
         }
-        //Toast.makeText(getActivity(), drawable_id+"", Toast.LENGTH_SHORT).show();
+        //ReturnToMapsActivity.makeText(getActivity(), drawable_id+"", ReturnToMapsActivity.LENGTH_SHORT).show();
 
         ImageView imageView = (ImageView) v.findViewById(R.id.iv_help_fragment);
         imageView.setImageDrawable(drawable);

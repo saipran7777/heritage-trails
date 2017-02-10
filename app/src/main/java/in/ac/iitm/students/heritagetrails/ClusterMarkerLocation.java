@@ -12,24 +12,21 @@ public class ClusterMarkerLocation implements ClusterItem {
     private String urlString;
 
 
-    public ClusterMarkerLocation(LatLng latLng )
-    {
+    public ClusterMarkerLocation(LatLng latLng) {
         position = latLng;
     }
 
-    public ClusterMarkerLocation(LatLng latLng,String urlString )
-    {
+    public ClusterMarkerLocation(LatLng latLng, String urlString) {
         position = latLng;
         this.urlString = urlString;
     }
 
     @Override
-    public LatLng getPosition()
-    {
+    public LatLng getPosition() {
         return position;
     }
 
-    public String getUrl(){
+    public String getUrl() {
         return urlString;
     }
 }

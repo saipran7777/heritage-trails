@@ -19,5 +19,5 @@ public class IITMBusStops {
     public static final LatLng narmada_bus_stop = new LatLng(12.986473, 80.235324);
     public static final LatLng fourth_cross_street_bus_stop = new LatLng(12.99599484, 80.23595825);
     public static final LatLng kv_bus_stop = new LatLng(12.99398019, 80.23437828);
-    public static final LatLng vanvani_bus_stop = new LatLng(12.9987747, 80.23919707 );
+    public static final LatLng vanvani_bus_stop = new LatLng(12.9987747, 80.23919707);
 }

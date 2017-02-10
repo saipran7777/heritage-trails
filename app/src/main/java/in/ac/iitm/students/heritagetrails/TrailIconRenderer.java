@@ -27,29 +27,28 @@ public class TrailIconRenderer extends DefaultClusterRenderer<ClusterMarkerLocat
 
 
     public TrailIconRenderer(Context context, GoogleMap map,
-                             ClusterManager<ClusterMarkerLocation> clusterManager, ArrayList<MarkerOptions> trailMarkerOptionsArray,MapsActivity mapsActivity) {
+                             ClusterManager<ClusterMarkerLocation> clusterManager, ArrayList<MarkerOptions> trailMarkerOptionsArray, MapsActivity mapsActivity) {
         super(context, map, clusterManager);
-        this.trailMarkerOptionsArray= trailMarkerOptionsArray;
-        this.context= context;
-        this.mapsActivity=mapsActivity;
+        this.trailMarkerOptionsArray = trailMarkerOptionsArray;
+        this.context = context;
+        this.mapsActivity = mapsActivity;
     }
 
     @Override
     protected void onBeforeClusterItemRendered(ClusterMarkerLocation item, MarkerOptions markerOptions) {
 
-        if(mapsActivity.getTrailCount()==1){
-            for(MarkerOptions mOptions : trailMarkerOptionsArray){
-                if(mOptions.getPosition()==item.getPosition()){
+        if (mapsActivity.getTrailCount() == 1) {
+            for (MarkerOptions mOptions : trailMarkerOptionsArray) {
+                if (mOptions.getPosition() == item.getPosition()) {
                     markerOptions.icon(vectorToBitmap(R.drawable.ic_trail_1_place_36dp))
                             .alpha(0.8f)
                             .title(mOptions.getTitle())
                             .snippet(mOptions.getSnippet());
                 }
             }
-        }
-        else if(mapsActivity.getTrailCount()==2){
-            for(MarkerOptions mOptions : trailMarkerOptionsArray){
-                if(mOptions.getPosition()==item.getPosition()){
+        } else if (mapsActivity.getTrailCount() == 2) {
+            for (MarkerOptions mOptions : trailMarkerOptionsArray) {
+                if (mOptions.getPosition() == item.getPosition()) {
                     markerOptions.icon(vectorToBitmap(R.drawable.ic_trail_2_place_36dp))
                             .alpha(0.8f)
                             .title(mOptions.getTitle())

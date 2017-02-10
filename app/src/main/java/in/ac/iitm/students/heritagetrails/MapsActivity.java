@@ -1,8 +1,8 @@
 package in.ac.iitm.students.heritagetrails;
 
 
-import android.animation.Animator;
 import android.Manifest;
+import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -23,7 +23,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -77,7 +76,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static in.ac.iitm.students.heritagetrails.IITMBusStops.*;
+import static in.ac.iitm.students.heritagetrails.IITMBusStops.bt_bus_stop;
+import static in.ac.iitm.students.heritagetrails.IITMBusStops.crc_bus_stop;
+import static in.ac.iitm.students.heritagetrails.IITMBusStops.fourth_cross_street_bus_stop;
+import static in.ac.iitm.students.heritagetrails.IITMBusStops.gajendra_circle_bus_stop;
+import static in.ac.iitm.students.heritagetrails.IITMBusStops.hsb_bus_stop;
+import static in.ac.iitm.students.heritagetrails.IITMBusStops.jam_bus_stop;
+import static in.ac.iitm.students.heritagetrails.IITMBusStops.kv_bus_stop;
+import static in.ac.iitm.students.heritagetrails.IITMBusStops.main_gate;
+import static in.ac.iitm.students.heritagetrails.IITMBusStops.narmada_bus_stop;
+import static in.ac.iitm.students.heritagetrails.IITMBusStops.tgh_bus_stop;
+import static in.ac.iitm.students.heritagetrails.IITMBusStops.vanvani_bus_stop;
+import static in.ac.iitm.students.heritagetrails.IITMBusStops.velachery_gate;
 
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,
@@ -85,12 +95,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private GoogleMap mMap;
-
-    public int getTrailCount() {
-        return trailCount;
-    }
-
     private int trailCount = 0;
     private ClusterManager<ClusterMarkerLocation> mBusStopClusterManager = null;
     private ClusterManager<ClusterMarkerLocation> mTrailClusterManager = null;
@@ -119,6 +125,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ArrayList<MarkerOptions> trailMarkerOptionsArray = new ArrayList<>();
     private int optionalUpdateDialogCount = 0;
 
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public int getTrailCount() {
+        return trailCount;
+    }
 
     @Override
     public void onResume() {
@@ -297,17 +317,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    public static void hideKeyboard(Activity activity) {
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        //Find the currently focused view, so we can grab the correct window token from it.
-        View view = activity.getCurrentFocus();
-        //If no view currently has focus, create a new one, just so we can grab a window token from it
-        if (view == null) {
-            view = new View(activity);
-        }
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
@@ -465,7 +474,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         MySingleton.getInstance(context).addToRequestQueue(jsonObjReq);
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -570,7 +578,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     if (polyline != null) {
                         if (isTrailShown) {
                             destroyTrailClusterer();
-                            Toast.makeText(context, "fuck", Toast.LENGTH_SHORT).show();
                         }
                         mMap.addPolyline(lineOptions);
                         if (mHeritageCenterMarker.isVisible())
@@ -630,7 +637,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         }
     }
-
 
     private void destroyTrailClusterer() {
         mMap.clear();
@@ -710,7 +716,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Building the url to the web service
         url = builder.build().toString();
     }
-
 
     private void startTrail(final Integer trailCounter) {
 
@@ -902,7 +907,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-
     protected void showBusRoute() {
 
         Request request = new JsonRequest<List<List<HashMap<String, String>>>>(Request.Method.GET, url, null, new Response.Listener<List<List<HashMap<String, String>>>>() {
@@ -1061,8 +1065,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
     }
-
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
     public boolean checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this,

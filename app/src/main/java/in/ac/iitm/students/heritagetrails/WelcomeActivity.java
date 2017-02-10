@@ -30,9 +30,37 @@ public class WelcomeActivity extends AppCompatActivity {
     private TextView[] dots;
     private int[] layouts;
     private Button btnSkip, btnNext;
-    private PrefManager prefManager;
-    private boolean startHelpPager=false;
+    //  viewpager change listener
+    ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener() {
 
+        @Override
+        public void onPageSelected(int position) {
+            addBottomDots(position);
+
+            // changing the next button text 'NEXT' / 'GOT IT'
+            if (position == layouts.length - 1) {
+                // last page. make button text to GOT IT
+                btnNext.setText(getString(R.string.start));
+                btnSkip.setVisibility(View.GONE);
+            } else {
+                // still pages are left
+                btnNext.setText(getString(R.string.next));
+                btnSkip.setVisibility(View.VISIBLE);
+            }
+        }
+
+        @Override
+        public void onPageScrolled(int arg0, float arg1, int arg2) {
+
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int arg0) {
+
+        }
+    };
+    private PrefManager prefManager;
+    private boolean startHelpPager = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,16 +72,16 @@ public class WelcomeActivity extends AppCompatActivity {
 
         String who_called_me = getIntent().getStringExtra("who_called_me");
         //Toast.makeText(WelcomeActivity.this, start, Toast.LENGTH_SHORT).show();
-        if (who_called_me.equals("splash_screen")){
+        if (who_called_me.equals("splash_screen")) {
 
             if (!prefManager.isFirstTimeLaunch()) {
-                Intent intent= new Intent(WelcomeActivity.this,MapsActivity.class);
+                Intent intent = new Intent(WelcomeActivity.this, MapsActivity.class);
                 startActivity(intent);
                 finish();
             }
 
             prefManager.setFirstLaunchCompleted();
-            startHelpPager=true;
+            startHelpPager = true;
 
         }
 
@@ -88,12 +116,12 @@ public class WelcomeActivity extends AppCompatActivity {
         btnSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(startHelpPager){
-                    Intent intent = new Intent(WelcomeActivity.this,HelpActivity.class);
-                    intent.putExtra("who_called_me","welcome_activity");
+                if (startHelpPager) {
+                    Intent intent = new Intent(WelcomeActivity.this, HelpActivity.class);
+                    intent.putExtra("who_called_me", "welcome_activity");
                     startActivity(intent);
                     finish();
-                }else ReturnToMapsActivity();
+                } else ReturnToMapsActivity();
             }
         });
 
@@ -107,12 +135,12 @@ public class WelcomeActivity extends AppCompatActivity {
                     // move to next screen
                     viewPager.setCurrentItem(current);
                 } else {
-                    if(startHelpPager){
-                        Intent intent = new Intent(WelcomeActivity.this,HelpActivity.class);
-                        intent.putExtra("who_called_me","welcome_activity");
+                    if (startHelpPager) {
+                        Intent intent = new Intent(WelcomeActivity.this, HelpActivity.class);
+                        intent.putExtra("who_called_me", "welcome_activity");
                         startActivity(intent);
                         finish();
-                    }else ReturnToMapsActivity();
+                    } else ReturnToMapsActivity();
                 }
             }
         });
@@ -144,36 +172,6 @@ public class WelcomeActivity extends AppCompatActivity {
     private void ReturnToMapsActivity() {
         finish();
     }
-
-    //  viewpager change listener
-    ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener() {
-
-        @Override
-        public void onPageSelected(int position) {
-            addBottomDots(position);
-
-            // changing the next button text 'NEXT' / 'GOT IT'
-            if (position == layouts.length - 1) {
-                // last page. make button text to GOT IT
-                btnNext.setText(getString(R.string.start));
-                btnSkip.setVisibility(View.GONE);
-            } else {
-                // still pages are left
-                btnNext.setText(getString(R.string.next));
-                btnSkip.setVisibility(View.VISIBLE);
-            }
-        }
-
-        @Override
-        public void onPageScrolled(int arg0, float arg1, int arg2) {
-
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int arg0) {
-
-        }
-    };
 
     /**
      * Making notification bar transparent

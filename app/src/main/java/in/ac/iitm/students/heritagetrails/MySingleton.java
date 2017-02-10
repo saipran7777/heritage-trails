@@ -18,8 +18,8 @@ import com.android.volley.toolbox.Volley;
 
 public class MySingleton {
     private static MySingleton mInstance;
-    private RequestQueue mRequestQueue;
     private static Context mCtx;
+    private RequestQueue mRequestQueue;
 
     private MySingleton(Context context) {
         mCtx = context;
@@ -56,7 +56,7 @@ public class MySingleton {
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.about_heritage);
-            String url_link= getIntent().getStringExtra("url");
+            String url_link = getIntent().getStringExtra("url");
             //Toast.makeText(AboutActivity.this,url_link,Toast.LENGTH_SHORT).show();
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
@@ -66,11 +66,12 @@ public class MySingleton {
             WebSettings webSettings = myWebView.getSettings();
             webSettings.setJavaScriptEnabled(true);
 
-            String url = getString(R.string.about_url)+url_link;
+            String url = getString(R.string.about_url) + url_link;
             //Toast.makeText(AboutActivity.this,url,Toast.LENGTH_SHORT).show();
             myWebView.loadUrl(url);
 
         }
+
         @Override
         public boolean onOptionsItemSelected(MenuItem menuItem) {
             if (menuItem.getItemId() == android.R.id.home) {
