@@ -55,6 +55,8 @@ public class TrailIconRenderer extends DefaultClusterRenderer<ClusterMarkerLocat
                             .snippet(mOptions.getSnippet());
                 }
             }
+
+            mapsActivity.setTrail_2_Shown();
         }
 
 

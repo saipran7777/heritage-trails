@@ -84,7 +84,7 @@ import static in.ac.iitm.students.heritagetrails.IITMBusStops.hsb_bus_stop;
 import static in.ac.iitm.students.heritagetrails.IITMBusStops.jam_bus_stop;
 import static in.ac.iitm.students.heritagetrails.IITMBusStops.kv_bus_stop;
 import static in.ac.iitm.students.heritagetrails.IITMBusStops.main_gate;
-import static in.ac.iitm.students.heritagetrails.IITMBusStops.narmada_bus_stop;
+import static in.ac.iitm.students.heritagetrails.IITMBusStops.Gurunath_bus_stop;
 import static in.ac.iitm.students.heritagetrails.IITMBusStops.tgh_bus_stop;
 import static in.ac.iitm.students.heritagetrails.IITMBusStops.vanvani_bus_stop;
 import static in.ac.iitm.students.heritagetrails.IITMBusStops.velachery_gate;
@@ -638,6 +638,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    public void setTrail_2_Shown(){
+        isTrail_2_Shown=true;
+    }
+
     private void destroyTrailClusterer() {
         mMap.clear();
         mMap.setOnCameraIdleListener(null);
@@ -772,7 +776,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             } else if (trailCount == 2) {
                                 Snackbar snackbar = Snackbar.make(coordinatorLayout, "Showing Trail (2/2)", Snackbar.LENGTH_LONG);
                                 snackbar.show();
-                                isTrail_2_Shown = true;
                             }
                             isTrailShown = true;
                         } catch (JSONException e) {
@@ -970,6 +973,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 // error.networkResponse.statusCode
                 // error.networkResponse.data
                 isBusRouteShown = false;
+
+                MenuItem item = myMenu.findItem(R.id.bus_route);
+                item.setIcon(R.drawable.ic_bus_deselected);
+                Snackbar snackbar = Snackbar.make(coordinatorLayout, "Internet Connection Failed", Snackbar.LENGTH_LONG);
+                snackbar.show();
                 //Toast.makeText(MapsActivity.this, "Loading failed!", Toast.LENGTH_LONG).show();
             }
         }) {
@@ -1228,7 +1236,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         items.add(new ClusterMarkerLocation(crc_bus_stop));
         items.add(new ClusterMarkerLocation(tgh_bus_stop));
         items.add(new ClusterMarkerLocation(jam_bus_stop));
-        items.add(new ClusterMarkerLocation(narmada_bus_stop));
+        items.add(new ClusterMarkerLocation(Gurunath_bus_stop));
         items.add(new ClusterMarkerLocation(fourth_cross_street_bus_stop));
         items.add(new ClusterMarkerLocation(kv_bus_stop));
         items.add(new ClusterMarkerLocation(vanvani_bus_stop));

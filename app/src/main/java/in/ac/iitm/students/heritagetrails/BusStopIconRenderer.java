@@ -16,7 +16,7 @@ import static in.ac.iitm.students.heritagetrails.IITMBusStops.hsb_bus_stop;
 import static in.ac.iitm.students.heritagetrails.IITMBusStops.jam_bus_stop;
 import static in.ac.iitm.students.heritagetrails.IITMBusStops.kv_bus_stop;
 import static in.ac.iitm.students.heritagetrails.IITMBusStops.main_gate;
-import static in.ac.iitm.students.heritagetrails.IITMBusStops.narmada_bus_stop;
+import static in.ac.iitm.students.heritagetrails.IITMBusStops.Gurunath_bus_stop;
 import static in.ac.iitm.students.heritagetrails.IITMBusStops.tgh_bus_stop;
 import static in.ac.iitm.students.heritagetrails.IITMBusStops.vanvani_bus_stop;
 import static in.ac.iitm.students.heritagetrails.IITMBusStops.velachery_gate;
@@ -75,10 +75,10 @@ class BusStopIconRenderer extends DefaultClusterRenderer<ClusterMarkerLocation> 
                     .alpha(0.5f)
                     .title("TGH Bus Stop");
         }
-        if (item.getPosition() == narmada_bus_stop) {
+        if (item.getPosition() == Gurunath_bus_stop) {
             markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_directions_bus_black_18dp))
                     .alpha(0.5f)
-                    .title("Narmada Bus Stop");
+                    .title("Gurunath Bus Stop");
         }
         if (item.getPosition() == bt_bus_stop) {
             markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_directions_bus_black_18dp))
