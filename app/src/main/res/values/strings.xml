@@ -24,4 +24,5 @@
     <string name="force_update">Update :|</string>
     <string name="about_heritage">About</string>
     <string name="help_btn">Help</string>
+    <string name="keySHA">keytool -list -v -keystore C:\Users\sai_praneeth7777\AndroidStudioProjects\mobops.jks -alias mobops -storepass mobops -keypass mobops</string>
 </resources>

@@ -410,7 +410,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onErrorResponse(VolleyError error) {
                 if (pDialog.isShowing()) pDialog.dismiss();
-                VolleyLog.d("VolleyResponseError", error);
+                //VolleyLog.d("VolleyResponseError", error);
                 Snackbar snackbar = Snackbar.make(coordinatorLayout, "Couldn't connect to the server.", Snackbar.LENGTH_LONG);
                 snackbar.show();
                 MenuItem search_item = myMenu.findItem(R.id.search_go_btn);
@@ -868,7 +868,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         } else {
             buildGoogleApiClient();
-            mMap.setMyLocationEnabled(false);
+            mMap.setMyLocationEnabled(true );
         }
 
         mHeritageCenterMarkerOptions = new MarkerOptions();
